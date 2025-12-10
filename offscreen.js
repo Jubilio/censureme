@@ -15,7 +15,7 @@ async function initModel() {
             // Try to load from local model folder
             try {
                 const modelUrl = chrome.runtime.getURL('libs/model/');
-                model = await nsfwjs.load(modelUrl, { size: 299 });
+                model = await nsfwjs.load(modelUrl);
                 console.log('✅ [Offscreen] Model loaded from local folder');
             } catch (e) {
                 console.warn('⚠️ [Offscreen] Local model load failed, falling back to CDN:', e);

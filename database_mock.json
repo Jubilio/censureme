@@ -62,6 +62,25 @@
           "description": "Test - mute (90-95s)"
         }
       ]
+    },
+    {
+      "id": "suggestive_test_video",
+      "title": "Hot Summer Beach Party - Late Night Special (Suggestive)",
+      "urlPatterns": ["suggestive-video", "hot-summer"],
+      "scenes": [
+        {
+          "start": 10,
+          "end": 60,
+          "type": "romance",
+          "description": "Suggestive swimwear scenes"
+        },
+        {
+          "start": 120,
+          "end": 150,
+          "type": "explicit",
+          "description": "Late night restricted content"
+        }
+      ]
     }
   ],
   "_instructions": "To add a new video: copy the video ID from the YouTube URL (e.g., 'dQw4w9WgXcQ' from youtube.com/watch?v=dQw4w9WgXcQ) and add it to urlPatterns. Then define scenes with start/end times in seconds."

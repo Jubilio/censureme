@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         siteBlockingEnabled: true,
         sensitivity: 50,
         defaultAction: 'blur',
-        keywords: ['gay', 'lesbian', 'queer', 'homosexual', 'romance']
+        keywords: ['gay', 'lesbian', 'queer', 'homosexual']
     };
 
     // Apply settings to UI
