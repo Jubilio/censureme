@@ -10,17 +10,19 @@ if (-not (Test-Path $modelDir)) {
 
 Write-Host "Downloading model.json..."
 try {
-    Invoke-WebRequest -Uri "https://d1zv2aa70wpiur.cloudfront.net/tfjs_quant_nsfw_mobilenet/model.json" -OutFile "$modelDir\model.json"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/infinitered/nsfwjs/master/models/mobilenet_v2/model.json" -OutFile "$modelDir\model.json"
     Write-Host "✅ model.json downloaded."
-} catch {
+}
+catch {
     Write-Error "Failed to download model.json. Please check your internet connection."
 }
 
 Write-Host "Downloading group1-shard1of1.bin..."
 try {
-    Invoke-WebRequest -Uri "https://d1zv2aa70wpiur.cloudfront.net/tfjs_quant_nsfw_mobilenet/group1-shard1of1.bin" -OutFile "$modelDir\group1-shard1of1.bin"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/infinitered/nsfwjs/master/models/mobilenet_v2/group1-shard1of1" -OutFile "$modelDir\group1-shard1of1.bin"
     Write-Host "✅ group1-shard1of1.bin downloaded."
-} catch {
+}
+catch {
     Write-Error "Failed to download shard file."
 }
 
