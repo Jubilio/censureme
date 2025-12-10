@@ -1,0 +1,68 @@
+{
+  "version": "2.0",
+  "sceneTypes": {
+    "kiss": {
+      "defaultAction": "blur",
+      "description": "Light romantic contact (kisses, hugs)"
+    },
+    "romance": {
+      "defaultAction": "overlay",
+      "description": "Romantic scenes, extended intimacy"
+    },
+    "explicit": {
+      "defaultAction": "skip",
+      "description": "Explicit content, nudity"
+    },
+    "dialogue": {
+      "defaultAction": "mute",
+      "description": "Verbal references only"
+    }
+  },
+  "videos": [
+    {
+      "id": "example_movie_1",
+      "title": "Example Movie Title",
+      "urlPatterns": ["example-movie", "examplemovie"],
+      "scenes": [
+        {
+          "start": 120,
+          "end": 135,
+          "type": "kiss",
+          "description": "Brief romantic moment"
+        }
+      ]
+    },
+    {
+      "id": "test_censorship_demo",
+      "title": "Test Video - Use video ID LkI5dts4MMs for testing",
+      "urlPatterns": ["LkI5dts4MMs"],
+      "scenes": [
+        {
+          "start": 10,
+          "end": 15,
+          "type": "kiss",
+          "description": "Test - blur (10-15s)"
+        },
+        {
+          "start": 30,
+          "end": 40,
+          "type": "romance",
+          "description": "Test - overlay (30-40s)"
+        },
+        {
+          "start": 60,
+          "end": 65,
+          "type": "explicit",
+          "description": "Test - skip (60-65s)"
+        },
+        {
+          "start": 90,
+          "end": 95,
+          "type": "dialogue",
+          "description": "Test - mute (90-95s)"
+        }
+      ]
+    }
+  ],
+  "_instructions": "To add a new video: copy the video ID from the YouTube URL (e.g., 'dQw4w9WgXcQ' from youtube.com/watch?v=dQw4w9WgXcQ) and add it to urlPatterns. Then define scenes with start/end times in seconds."
+}

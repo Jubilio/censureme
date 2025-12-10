@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Filter</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          <img src="icons/icon48.png" alt="Shield Icon" id="logo-img" />
+          <h1>Content Guard</h1>
+        </div>
+        <div class="status-indicator active">Active</div>
+      </header>
+
+      <main>
+        <div class="card">
+          <h2>Detection Methods</h2>
+
+          <div class="control-group">
+            <div class="label-group">
+              <label for="ai-toggle">AI Detection</label>
+              <span class="subtext">Real-time video analysis</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="ai-toggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="control-group">
+            <div class="label-group">
+              <label for="keywords-toggle">Keywords</label>
+              <span class="subtext">Scan subtitles & text</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="keywords-toggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="control-group">
+            <div class="label-group">
+              <label for="timestamps-toggle">Community Database</label>
+              <span class="subtext">Crowdsourced timestamps</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="timestamps-toggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="control-group">
+            <div class="label-group">
+              <label for="blocking-toggle">🚫 Site Blocking</label>
+              <span class="subtext">Block adult websites</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="blocking-toggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Settings</h2>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label>Sensitivity</label>
+              <span id="sensitivity-value">50%</span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="50"
+              class="range-slider"
+              id="sensitivity-slider"
+            />
+            <div class="slider-labels">
+              <span>Low</span>
+              <span>High</span>
+            </div>
+          </div>
+
+          <div class="select-group">
+            <label for="action-select">Censorship Action</label>
+            <div class="custom-select-wrapper">
+              <select id="action-select">
+                <option value="blur">Blur Screen</option>
+                <option value="overlay">Show Overlay</option>
+                <option value="mute">Mute Audio</option>
+                <option value="skip">Skip Scene</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="card keyword-card"
+          id="keyword-section"
+          style="display: none"
+        >
+          <h2>Keywords</h2>
+          <textarea
+            id="keywords-input"
+            placeholder="Enter keywords separated by commas..."
+            rows="3"
+          ></textarea>
+          <button id="save-keywords" class="btn-secondary">
+            Update Keywords
+          </button>
+        </div>
+      </main>
+
+      <footer>
+        <button id="test-btn" class="btn-test">🧪 Test Censorship</button>
+        <button id="save-btn" class="btn-primary">Save Changes</button>
+      </footer>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
