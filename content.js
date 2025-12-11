@@ -15,7 +15,7 @@ let isModelLoading = false;
     initObserver();
     
     // Initialize AI in offscreen document if enabled
-    if (settings.aiEnabled) {
+    if (settings.enabled && settings.aiEnabled) {
         chrome.runtime.sendMessage({ action: 'initOffscreenAI' });
     }
 })();

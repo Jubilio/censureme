@@ -12,118 +12,154 @@
   </head>
   <body>
     <div class="container">
-      <header>
-        <div class="logo">
-          <img src="icons/icon48.png" alt="Shield Icon" id="logo-img" />
-          <h1>Content Guard</h1>
-        </div>
-        <div class="status-indicator active">Active</div>
-      </header>
-
-      <main>
-        <div class="card">
-          <h2>Detection Methods</h2>
-
-          <div class="control-group">
-            <div class="label-group">
-              <label for="ai-toggle">AI Detection</label>
-              <span class="subtext">Real-time video analysis</span>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="ai-toggle" />
-              <span class="slider round"></span>
-            </label>
+      
+      <!-- Login View (Hidden by default) -->
+      <div id="login-view" class="view hidden">
+          <div class="logo">
+              <img src="icons/icon48.png" alt="Shield Icon" />
+              <h1>Security</h1>
           </div>
-
-          <div class="control-group">
-            <div class="label-group">
-              <label for="keywords-toggle">Keywords</label>
-              <span class="subtext">Scan subtitles & text</span>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="keywords-toggle" />
-              <span class="slider round"></span>
-            </label>
+          <div class="pin-container">
+              <p>Enter PIN to Unlock</p>
+              <input type="password" id="pin-input" maxlength="4" placeholder="••••" />
+              <button id="unlock-btn" class="primary-btn">Unlock</button>
+              <p id="login-error" class="error-msg hidden">Incorrect PIN</p>
           </div>
+      </div>
 
-          <div class="control-group">
-            <div class="label-group">
-              <label for="timestamps-toggle">Community Database</label>
-              <span class="subtext">Crowdsourced timestamps</span>
+      <!-- Main View container -->
+      <div id="main-view">
+        
+        <!-- Dashboard (Default Home) -->
+        <div id="dashboard-view">
+          <header>
+            <div class="logo">
+              <img src="icons/icon48.png" alt="Shield Icon" id="logo-img" />
+              <h1>Content Guard</h1>
             </div>
-            <label class="switch">
-              <input type="checkbox" id="timestamps-toggle" />
-              <span class="slider round"></span>
-            </label>
+            <button id="settings-btn" class="icon-btn" aria-label="Settings" title="Settings">⚙️</button>
+          </header>
+
+          <div class="dashboard-content">
+              <div class="status-card">
+                  <div class="status-circle active" id="status-circle"></div>
+                  <h2 id="status-text">Protected</h2>
+                  <p>Content Guard is running</p>
+              </div>
+
+              <div class="master-switch-container">
+                  <label class="switch big-switch">
+                      <input type="checkbox" id="master-toggle" checked title="Enable Extension" />
+                      <span class="slider round"></span>
+                  </label>
+              </div>
           </div>
-
-          <div class="control-group">
-            <div class="label-group">
-              <label for="blocking-toggle">🚫 Site Blocking</label>
-              <span class="subtext">Block adult websites</span>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="blocking-toggle" />
-              <span class="slider round"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Settings</h2>
-
-          <div class="slider-group">
-            <div class="slider-header">
-              <label for="sensitivity-slider">Sensitivity</label>
-              <span id="sensitivity-value">50%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value="50"
-              class="range-slider"
-              id="sensitivity-slider"
-            />
-            <div class="slider-labels">
-              <span>Low</span>
-              <span>High</span>
-            </div>
-          </div>
-
-          <div class="select-group">
-            <label for="action-select">Censorship Action</label>
-            <div class="custom-select-wrapper">
-              <select id="action-select">
-                <option value="blur">Blur Screen</option>
-                <option value="overlay">Show Overlay</option>
-                <option value="mute">Mute Audio</option>
-                <option value="skip">Skip Scene</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="card keyword-card hidden"
-          id="keyword-section"
-        >
-          <h2>Keywords</h2>
-          <textarea
-            id="keywords-input"
-            placeholder="Enter keywords separated by commas..."
-            rows="3"
-          ></textarea>
-          <button id="save-keywords" class="btn-secondary">
-            Update Keywords
-          </button>
-        </div>
-      </main>
-
+          
       <footer>
-        <button id="test-btn" class="btn-test">🧪 Test Censorship</button>
-        <button id="save-btn" class="btn-primary">Save Changes</button>
+         <button id="setup-pin-btn" class="secondary-btn">Set PIN Protection</button>
+         <div class="version-info">Version 2.1.0</div>
       </footer>
+        </div>
+
+        <!-- Settings View (Hidden by default) -->
+        <div id="settings-view" class="hidden">
+          <header>
+              <button id="back-btn" class="icon-btn" aria-label="Back" title="Back">←</button>
+              <h2>Settings</h2>
+              <div style="width: 24px;"></div> <!-- Spacer -->
+          </header>
+
+          <div class="settings-content">
+              <div class="card">
+                <h2>Detection Methods</h2>
+                
+                <div class="control-group">
+                  <div class="label-group">
+                    <label>AI Detection</label>
+                    <div class="subtext">Real-time image analysis</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="ai-toggle" checked title="Toggle AI Detection" />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
+                <div class="control-group">
+                  <div class="label-group">
+                    <label>Keywords</label>
+                    <div class="subtext">Block text patterns</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="keywords-toggle" checked title="Toggle Keywords" />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
+                <div class="control-group">
+                  <div class="label-group">
+                    <label>Timestamps</label>
+                    <div class="subtext">Community database</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="timestamps-toggle" checked title="Toggle Timestamps" />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                
+                 <div class="control-group">
+                  <div class="label-group">
+                    <label>Site Blocking</label>
+                    <div class="subtext">Block known adult sites</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="blocking-toggle" checked title="Toggle Site Blocking" />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div id="keyword-section" class="card hidden">
+                <h2>Blocked Keywords</h2>
+                <textarea id="keywords-input" rows="3" placeholder="Enter keywords separated by commas..."></textarea>
+                <button id="save-keywords" class="btn-secondary">Update Keywords</button>
+              </div>
+
+              <div class="card">
+                <h2>Configuration</h2>
+                
+                <div class="slider-group">
+                  <div class="slider-header">
+                    <label for="sensitivity-slider">Sensitivity</label>
+                    <span id="sensitivity-value">50%</span>
+                  </div>
+                  <input type="range" min="0" max="100" value="50" class="range-slider" id="sensitivity-slider" title="sensitivity-slider">
+                  <div class="slider-labels">
+                    <span>Low</span>
+                    <span>High</span>
+                  </div>
+                </div>
+
+                <div class="select-group">
+                  <div class="setting-item">
+                    <label for="action-select">Default Action</label>
+                    <select id="action-select">
+                      <option value="blur">Blur</option>
+                      <option value="overlay">Black Overlay</option>
+                      <option value="skip">Skip Scene</option>
+                      <option value="mute">Mute Audio</option>
+                    </select>
+                  </div>
+                  
+                  <!-- Security Section Removed (Moved to Dashboard) -->
+                </div>
+              </div>
+
+              <button id="test-btn" class="btn-test">🧪 Test Censorship</button>
+              <button id="save-btn" class="btn-primary" style="margin-top: 10px;">Save Changes</button>
+          </div>
+        </div>
+
+      </div>
     </div>
     <script src="popup.js"></script>
   </body>

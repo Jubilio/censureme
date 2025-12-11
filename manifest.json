@@ -42,5 +42,8 @@
       ],
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+  "sandbox": {
+    "pages": ["sandbox.html"]
+  }
 }

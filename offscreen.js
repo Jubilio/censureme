@@ -1,95 +1,72 @@
-// Offscreen AI Processor - Runs in isolated context without Trusted Types
-let model = null;
-let isModelLoading = false;
+// Offscreen Bridge - Communicates between Background and Sandbox
+let sandboxFrame = null;
+let pendingRequests = new Map();
 
-// Initialize model on load
-async function initModel() {
-    if (isModelLoading || model) return;
-    isModelLoading = true;
-    
-    console.log('🤖 [Offscreen] Loading NSFW.js model...');
-    
-    try {
-        // Check if nsfwjs is available
-        if (typeof nsfwjs !== 'undefined') {
-            // Try to load from local model folder
-            try {
-                const modelUrl = chrome.runtime.getURL('libs/model/');
-                model = await nsfwjs.load(modelUrl);
-                console.log('✅ [Offscreen] Model loaded from local folder');
-            } catch (e) {
-                console.warn('⚠️ [Offscreen] Local model load failed, falling back to CDN:', e);
-                // Fallback to default CDN model
-                model = await nsfwjs.load();
-                console.log('✅ [Offscreen] Model loaded from CDN');
-            }
-        } else {
-            throw new Error('NSFW.js not available');
-        }
-    } catch (e) {
-        console.error('❌ [Offscreen] Failed to load model:', e);
-        model = null;
-    }
-    
-    isModelLoading = false;
+// Initialize
+function init() {
+    sandboxFrame = document.getElementById('sandbox');
+    console.log('🌉 [Offscreen] Bridge initialized');
 }
 
-// Listen for messages from background script
+// Handle messages from sandbox
+window.addEventListener('message', (event) => {
+    // Verify origin if needed, or simply trust local iframe
+    const { action, id, success, predictions, error } = event.data;
+
+    if (action === 'analyzeResult') {
+        const resolve = pendingRequests.get(id);
+        if (resolve) {
+            if (success) {
+                resolve({ success: true, predictions });
+            } else {
+                resolve({ error: error || 'Unknown error from sandbox', predictions: null });
+            }
+            pendingRequests.delete(id);
+        }
+    } else if (action === 'modelLoaded') {
+        console.log(`✅ [Offscreen] Sandbox model loaded: ${success}`);
+    }
+});
+
+// Handle messages from background
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'analyzeFrame') {
-        analyzeFrame(request.imageData).then(sendResponse);
-        return true; // Keep channel open for async response
+        analyzeFrameInSandbox(request.imageData).then(sendResponse);
+        return true; 
     }
     
     if (request.action === 'initModel') {
-        initModel().then(() => {
-            sendResponse({ success: model !== null });
-        });
-        return true;
-    }
-    
-    if (request.action === 'getStatus') {
-        sendResponse({
-            modelLoaded: model !== null,
-            isLoading: isModelLoading
-        });
+        // Sandbox inits itself on load, just check if frame exists
+        sendResponse({ success: !!sandboxFrame });
         return true;
     }
 });
 
-// Analyze a frame (receives base64 image data)
-async function analyzeFrame(imageDataUrl) {
-    if (!model) {
-        return { error: 'Model not loaded', predictions: null };
-    }
-    
-    try {
-        // Create image element from data URL
-        const img = new Image();
-        img.src = imageDataUrl;
-        
-        await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-        });
-        
-        // Run inference
-        const predictions = await model.classify(img);
-        
-        console.log('🔍 [Offscreen] Predictions:', predictions);
-        
-        return {
-            success: true,
-            predictions: predictions.map(p => ({
-                className: p.className,
-                probability: p.probability
-            }))
-        };
-    } catch (e) {
-        console.error('❌ [Offscreen] Analysis error:', e);
-        return { error: e.message, predictions: null };
-    }
+function analyzeFrameInSandbox(imageData) {
+    return new Promise((resolve) => {
+        if (!sandboxFrame || !sandboxFrame.contentWindow) {
+            resolve({ error: 'Sandbox not ready', predictions: null });
+            return;
+        }
+
+        const id = Math.random().toString(36).substring(7);
+        pendingRequests.set(id, resolve);
+
+        sandboxFrame.contentWindow.postMessage({
+            action: 'analyzeFrame',
+            id,
+            imageData
+        }, '*');
+
+        // Timeout fallback
+        setTimeout(() => {
+            if (pendingRequests.has(id)) {
+                pendingRequests.delete(id);
+                resolve({ error: 'Sandbox timeout', predictions: null });
+            }
+        }, 5000); 
+    });
 }
 
-// Auto-init on load
-initModel();
+// Start
+init();

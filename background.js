@@ -9,6 +9,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   // Initialize default settings
   await chrome.storage.local.set({
     settings: {
+      enabled: true,
       aiEnabled: true,
       keywordsEnabled: true,
       timestampsEnabled: true,
@@ -16,6 +17,9 @@ chrome.runtime.onInstalled.addListener(async () => {
       sensitivity: 50,
       defaultAction: "blur",
       keywords: ["gay", "lesbian", "queer", "homosexual", "romance"],
+      security: {
+        pin: null
+      }
     },
   });
 
@@ -84,7 +88,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
   
   // Check settings
   const { settings } = await chrome.storage.local.get('settings');
-  if (!settings || !settings.siteBlockingEnabled) return;
+  if (!settings || !settings.enabled || !settings.siteBlockingEnabled) return;
   
   // Ensure blocklist is loaded
   await ensureBlocklist();
