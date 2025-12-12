@@ -6,6 +6,18 @@ let pendingRequests = new Map();
 function init() {
     sandboxFrame = document.getElementById('sandbox');
     console.log('🌉 [Offscreen] Bridge initialized');
+    
+    // Pass the model URL to the sandbox
+    // We use a slight delay to ensure the iframe is loaded
+    sandboxFrame.onload = () => {
+        const modelUrl = chrome.runtime.getURL('libs/model/');
+        console.log('📦 [Offscreen] Sending model URL to sandbox:', modelUrl);
+        
+        sandboxFrame.contentWindow.postMessage({
+            action: 'loadModel',
+            url: modelUrl
+        }, '*');
+    };
 }
 
 // Handle messages from sandbox

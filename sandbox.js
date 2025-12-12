@@ -1,29 +1,21 @@
 let model = null;
 
 // Initialize model
-async function init() {
-    try {
-        if (typeof nsfwjs === 'undefined') {
-            throw new Error('NSFWJS library not loaded');
-        }
-        // Sandbox pages can't access chrome.runtime.getURL directly for resources outside their sandbox
-        // calling .load() without args loads from CDN by default which works fine in sandbox
-        model = await nsfwjs.load();
-        
-        // Notify parent that model is ready
-        window.parent.postMessage({ action: 'modelLoaded', success: true }, '*');
-        console.log('✅ [Sandbox] Model loaded');
-    } catch (e) {
-        console.error('❌ [Sandbox] Model load failed:', e);
-        window.parent.postMessage({ action: 'modelLoaded', success: false, error: e.message }, '*');
-    }
-}
+// (init function moved to bottom and updated to accept URL)
+
 
 // Handle messages from parent
-window.addEventListener('message', async (event) => {
-    const { action, imageData, id } = event.data;
+// Don't auto-init from CDN anymore. Wait for local path from offscreen.js
+// init();
 
-    if (action === 'analyzeFrame') {
+window.addEventListener('message', async (event) => {
+    const { action, imageData, id, url } = event.data;
+
+    if (action === 'loadModel') {
+        await init(url);
+    }
+    
+    else if (action === 'analyzeFrame') {
         if (!model) {
             window.parent.postMessage({ 
                 action: 'analyzeResult', 
@@ -36,6 +28,7 @@ window.addEventListener('message', async (event) => {
         try {
             const img = new Image();
             img.onload = async () => {
+                // ... (rest of logic same)
                 const predictions = await model.classify(img);
                 window.parent.postMessage({
                     action: 'analyzeResult',
@@ -65,5 +58,21 @@ window.addEventListener('message', async (event) => {
     }
 });
 
-// Start initialization
-init();
+async function init(modelUrl) {
+    try {
+        if (typeof nsfwjs === 'undefined') {
+            throw new Error('NSFWJS library not loaded');
+        }
+        
+        console.log(`📥 [Sandbox] Loading model from: ${modelUrl || 'default CDN'}`);
+        // If modelUrl is provided, load from there. Otherwise default to CDN.
+        model = modelUrl ? await nsfwjs.load(modelUrl) : await nsfwjs.load();
+        
+        // Notify parent that model is ready
+        window.parent.postMessage({ action: 'modelLoaded', success: true }, '*');
+        console.log('✅ [Sandbox] Model loaded');
+    } catch (e) {
+        console.error('❌ [Sandbox] Model load failed:', e);
+        window.parent.postMessage({ action: 'modelLoaded', success: false, error: e.message }, '*');
+    }
+}
